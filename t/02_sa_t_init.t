@@ -1,11 +1,10 @@
 #!/usr/bin/perl -T
 
-#use lib '.'; use lib 't';
-
 # set up some things the way t/SATest.pm in Mail::SpamAssassin does
 # to try to duplicate whatever causes the taint failures we are looking for
 # The failures didn't happen without any of this stuff.
-#use SATest; sa_t_init("arc");
+use lib '.'; use lib 't';
+use SATest; sa_t_init("arc");
 
 use strict;
 use warnings;
