@@ -1,0 +1,8 @@
+Makefile.PL
+Changes
+LICENSE
+README.md
+lib/Acme/TaintTest.pm
+t/00_tainttests.t
+t/test_dir
+MANIFEST
