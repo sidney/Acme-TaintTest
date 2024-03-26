@@ -3,7 +3,7 @@ require v5.14.0;
 use strict;
 use warnings;
 
-our $VERSION = "0.0.2";
+our $VERSION = "0.0.3";
 
 print "This is a dummy, it's all in the tests\n";
 

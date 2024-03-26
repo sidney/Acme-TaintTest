@@ -4,7 +4,7 @@
 # to try to duplicate whatever causes the taint failures we are looking for
 # The failures didn't happen without any of this stuff.
 use lib '.'; use lib 't';
-use SATest; sa_t_init("arc");
+use SATest; sa_t_init("02_sa_t_init");
 
 use strict;
 use warnings;
@@ -24,13 +24,6 @@ diag("\nINC for tests is '@INC'\nPATH is $ENV{'PATH'}\n");
 # some CPAN test machines get strange taint errors in Mail::SpamAssassin tests
 # This is an attempt to isolate the problem in a series of simpler tests that
 # might cause the same effect.
-
-(-f "t/test_dir") && chdir("t");        # run from ..
--f "test_dir"  or die "FATAL: not in test directory?\n";
-
-mkdir ("log", 0755);
--d "log" or die "FATAL: failed to create log dir\n";
-chmod (0755, "log"); # set in case log already exists with wrong permissions
 
 my @CHARS = (qw/ A B C D E F G H I J K L M N O P Q R S T U V W X Y Z
                  a b c d e f g h i j k l m n o p q r s t u v w x y z

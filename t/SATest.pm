@@ -10,10 +10,11 @@ use File::Copy;
 use File::Path;
 use File::Spec;
 use File::Temp qw(tempdir);
+use Scalar::Util qw(tainted);
 
-use Test::More    ();
+use Test::More ();
 
-use vars qw($RUNNING_ON_WINDOWS);
+use vars qw($RUNNING_ON_WINDOWS $mainpid);
 
 my $module_code_dir;
 BEGIN {
@@ -62,7 +63,39 @@ BEGIN {
 use lib $module_code_dir;
 
 sub sa_t_init {
-  # everything it needed was in begin blocks
+  my $tname = shift;
+  $mainpid = $$;
+
+  (-f "t/test_dir") && chdir("t");        # run from ..
+  -f "test_dir"  or die "FATAL: not in test directory?\n";
+
+  mkdir ("log", 0755);
+  -d "log" or die "FATAL: failed to create log dir\n";
+  chmod (0755, "log"); # set in case log already exists with wrong permissions
+
+  if (!$RUNNING_ON_WINDOWS) {
+    untaint_system("chacl -B log 2>/dev/null || setfacl -b log 2>/dev/null"); # remove acls that confuse test
+  }
+
+  my $template_in_init = File::Spec->catdir("log", "$tname.XXXXXX");
+  Test::More::diag("template_in_init tainted with catdir $template_in_init") if tainted($template_in_init);
+
+  my $workdir = File::Temp::tempdir("$tname.XXXXXX", DIR => "log");
+  die "FATAL: failed to create workdir: $!" unless -d $workdir;
+ }
+
+# Simple version of untaint_var for internal use
+sub untaint_var {
+    local($1);
+    $_[0] =~ /^(.*)\z/s;
+    return $1;
+}
+
+# untainted system()
+sub untaint_system {
+    my @args;
+    push @args, untaint_var($_) foreach (@_);
+    return system(@args);
 }
 
 1;
