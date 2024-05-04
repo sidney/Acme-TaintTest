@@ -3,7 +3,7 @@ require v5.14.0;
 use strict;
 use warnings;
 
-our $VERSION = "0.0.3";
+our $VERSION = "0.0.4";
 
 print "This is a dummy, it's all in the tests\n";
 
@@ -14,7 +14,7 @@ __END__
 
 =head1 NAME
 
-Acme::TaintTest - module for checking taint peculiarities on some CPAN testers
+Acme::TaintTest - The module doesn't do anything
 
 =head1 SYNOPSIS
 
@@ -22,8 +22,11 @@ Acme::TaintTest - module for checking taint peculiarities on some CPAN testers
 
 =head1 DESCRIPTION
 
-Acme::TaintTest doesn't do anything.
-It is only for looking for some taint related problems on some CPAN tester machines
+Acme::TaintTest began as a way of testing a Perl bug related to taint
+checking that could only be made to be triggered on certain CPAN
+tester machines. The author has retained it to use for any future
+experiments that require subitting a module for CPAN testing. The
+module itself is not intended to do anything.
 
 =head1 LICENSE
 

@@ -1,11 +1,10 @@
-Makefile.PL
 Changes
 LICENSE
+MANIFEST
+Makefile.PL
 README.md
 lib/Acme/TaintTest.pm
-t/00_tainttests.t
-t/01_relative_inc.t
-t/02_sa_t_init.t
-t/SATest.pm
+t/a00_init.pm
+t/a00_tester_id.t
+t/testrules.yml
 t/test_dir
-MANIFEST

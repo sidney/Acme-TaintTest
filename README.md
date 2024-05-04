@@ -8,7 +8,11 @@ Acme::TaintTest - it is all in the test
 
 # DESCRIPTION
 
-Acme::TaintTest   - module for checking taint peculiarities on some CPAN testers
+Acme::TaintTest began as a way of testing a Perl bug related to taint
+checking that could only be made to be triggered on certain CPAN
+tester machines. The author has retained it to use for any future
+experiments that require subitting a module for CPAN testing. The
+module itself is not intended to do anything.
 
 # LICENSE
 

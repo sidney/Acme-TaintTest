@@ -1,0 +1,6 @@
+---
+seq:
+  - seq:
+    - t/a00_tester_id.t
+  # rest of the tests
+  - par: **

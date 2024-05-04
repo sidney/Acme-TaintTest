@@ -1,29 +1,26 @@
-# common functionality for tests.
-# imported into main for ease of use.
+## minimal subset of SATest which does the PATH cleaning needed for taint mode
+## makes the t/log directory but stops short of doing the calls to catdir and tempdir that fails
+## leaving that for the test file to do
+
 package main;
 
-require v5.14.0;
+use v5.14.0;
+
+# use strict;
+# use warnings;
+# use re 'taint';
 
 use Cwd;
-use File::Basename;
-use File::Copy;
+use Config;
 use File::Path;
 use File::Spec;
-use File::Temp qw(tempdir);
-use Scalar::Util qw(tainted);
 
-use Test::More ();
+use POSIX;
 
-use vars qw($RUNNING_ON_WINDOWS $mainpid);
+use vars qw($RUNNING_ON_WINDOWS);
 
-my $module_code_dir;
 BEGIN {
-  require Exporter;
-  use vars qw(@ISA @EXPORT @EXPORT_OK);
-  @ISA = qw(Exporter);
-
   $RUNNING_ON_WINDOWS = ($^O =~ /^(mswin|dos|os2)/oi);
-
   # Clean PATH so taint doesn't complain
   if (!$RUNNING_ON_WINDOWS) {
     $ENV{'PATH'} = '/bin:/usr/bin:/usr/local/bin';
@@ -47,24 +44,10 @@ BEGIN {
             }
           @pathdirs);
   }
-  
-  # Fix INC to point to absolute path of built module
-  if (-e 't/test_dir') { $module_code_dir = 'blib/lib'; }
-  elsif (-e 'test_dir') { $module_code_dir = '../blib/lib'; }
-  else { die "FATAL: not in or below test directory?\n"; }
-  File::Spec->rel2abs($module_code_dir) =~ /^(.*)\z/s;
-  $module_code_dir = $1;
-  if (not -d $module_code_dir) {
-    die "FATAL: not in expected directory relative to built code tree?\n";
-  }
 }
 
-# use is run at compile time, but after the variable has been computed in the BEGIN block
-use lib $module_code_dir;
-
-sub sa_t_init {
+sub t_init {
   my $tname = shift;
-  $mainpid = $$;
 
   (-f "t/test_dir") && chdir("t");        # run from ..
   -f "test_dir"  or die "FATAL: not in test directory?\n";
@@ -77,12 +60,7 @@ sub sa_t_init {
     untaint_system("chacl -B log 2>/dev/null || setfacl -b log 2>/dev/null"); # remove acls that confuse test
   }
 
-  my $template_in_init = File::Spec->catdir("log", "$tname.XXXXXX");
-  Test::More::diag("template_in_init tainted with catdir $template_in_init") if tainted($template_in_init);
-
-  my $workdir = File::Temp::tempdir("$tname.XXXXXX", DIR => "log");
-  die "FATAL: failed to create workdir: $!" unless -d $workdir;
- }
+}
 
 # Simple version of untaint_var for internal use
 sub untaint_var {
